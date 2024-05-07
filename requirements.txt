@@ -8,7 +8,6 @@ tashaphyne
 plotly
 matplotlib
 wordcloud
-sklearn
+scikit-learn
 arabic-reshaper
 python-bidi
-pickle
