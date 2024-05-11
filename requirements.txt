@@ -11,3 +11,4 @@ wordcloud
 scikit-learn
 arabic-reshaper
 python-bidi
+openpyxl
