@@ -13,7 +13,5 @@ This project aims to contribute to the success of Expo2030 in Riyadh by evaluati
 
 ### [Model Training](./notebooks/TFIDF+Model-Training.ipynb)
 
-### Deployment
-This model was deployed by using `streamlit` framework to build and depoly the website [click here](https://expo-reviews-analysis.streamlit.app/).
 
 
