@@ -26,7 +26,7 @@ from pathlib import Path
 
 #emojis encoding
 
-arabic_emoji = pd.read_csv(f"{Path(__file__).parent}\\arabic_emojis.csv")
+arabic_emoji = pd.read_csv(f"{Path(__file__).parent}/arabic_emojis.csv")
 UNICODE_EMOJI = dict(map(lambda i,j : (i,j) , list(arabic_emoji['emoji']),list(arabic_emoji['text'])))
 
 #stopwords
@@ -104,8 +104,8 @@ def _stem(text):
 def get_classification(dataset):
   data=dataset.values
   #load the models
-  model=pickle.load(open(f"{Path(__file__).parent}\\naivebayes-tfidf.pkl",'rb'))
-  vectorizer=pickle.load(open(f"{Path(__file__).parent}\\tfidf-vectorizer.pkl",'rb'))
+  model=pickle.load(open(f"{Path(__file__).parent}/naivebayes-tfidf.pkl",'rb'))
+  vectorizer=pickle.load(open(f"{Path(__file__).parent}/tfidf-vectorizer.pkl",'rb'))
 
   #preprocess the data
   data_cleaned=list(map(_clean_data,data))
@@ -144,7 +144,7 @@ def plot_wordcloud(dataset, colormap="Greens"):
     stopwords=stop_words.union({'اكسبو','دبي','إكسبو'})
 
     # load the mask image and font type
-    mask = np.array(Image.open(f"{Path(__file__).parent}\\twitter_mask.png"))
+    mask = np.array(Image.open(f"{Path(__file__).parent}/twitter_mask.png"))
     font = f"{Path(__file__).parent}\\NotoNaskhArabic-Regular.ttf"
 
     # generate custom colormap
