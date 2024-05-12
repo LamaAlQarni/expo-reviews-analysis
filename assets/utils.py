@@ -145,7 +145,7 @@ def plot_wordcloud(dataset, colormap="Greens"):
 
     # load the mask image and font type
     mask = np.array(Image.open(f"{Path(__file__).parent}/twitter_mask.png"))
-    font = f"{Path(__file__).parent}\\NotoNaskhArabic-Regular.ttf"
+    font = f"{Path(__file__).parent}/NotoNaskhArabic-Regular.ttf"
 
     # generate custom colormap
     cmap = mpl.cm.get_cmap(colormap)(np.linspace(0, 1, 20))
