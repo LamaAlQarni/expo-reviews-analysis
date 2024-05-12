@@ -8,7 +8,7 @@ import pandas as pd
 
 
 st.markdown("# Expo Visitor's Review Analysis")
-st.markdown("This website provides an automated sentiment classification and analysis of wExpo's visitors feedback")
+st.markdown("This website provides an automated sentiment classification and analysis of Expo's visitors feedback")
 st.text("");st.text("")
 st.markdown("#### Upload File Here")
 
