@@ -8,7 +8,9 @@ tashaphyne
 plotly
 matplotlib
 wordcloud
-scikit-learn <= 1.2.2
+scikit-learn
 arabic-reshaper
 python-bidi
-openpyxl
+transformers
+torch
+datasets
