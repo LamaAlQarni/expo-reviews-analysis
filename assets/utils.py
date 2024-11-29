@@ -22,11 +22,13 @@ import pandas as pd
 import numpy as np 
 import pickle
 from pathlib import Path
-
+import torch
+from .models import get_dataloader, get_model, infer_sentiments
+import time
 
 #emojis encoding
 
-arabic_emoji = pd.read_csv(f"{Path(__file__).parent}/arabic_emojis.csv")
+arabic_emoji = pd.read_csv(f"{Path(__file__).parent}\\arabic_emojis.csv")
 UNICODE_EMOJI = dict(map(lambda i,j : (i,j) , list(arabic_emoji['emoji']),list(arabic_emoji['text'])))
 
 #stopwords
@@ -85,7 +87,7 @@ def _clean_data(text):
       text = ''.join("_".join(UNICODE_EMOJI[emot].replace(",", "").replace(":", "").split()) + " " if emot in UNICODE_EMOJI else emot for emot in text)
   #remove other emojis
   text = emoji.replace_emoji(text, replace='')
-
+  
   return text
 
 
@@ -101,22 +103,26 @@ def _stem(text):
 
   return ' '.join(stemmized)
 
+def get_device():
+   device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+   return device
+
 def get_classification(dataset):
   data=dataset.values
+  device=get_device()
+  #load dataloader
+  dataloader=get_dataloader(data)
   #load the models
-  model=pickle.load(open(f"{Path(__file__).parent}/naivebayes-tfidf.pkl",'rb'))
-  vectorizer=pickle.load(open(f"{Path(__file__).parent}/tfidf-vectorizer.pkl",'rb'))
-
-  #preprocess the data
-  data_cleaned=list(map(_clean_data,data))
-  data=list(map(_stem,data_cleaned))
-
+  model=get_model(device,type='lstm')
   #make predictions
-  X_vectorized=vectorizer.transform(data)
-  y_pred=model.predict(X_vectorized)
+  start=time.time()
+  predictions=infer_sentiments(model, dataloader,device,type='lstm')
+  inference_time=time.time() - start
+  print(f'It took the attn-LSTM: {inference_time} to classfy data.')
   mapped_predictions={0:'negative',1:'neutral',2:'positive'}
-  y_pred=[mapped_predictions[i] for i in y_pred]
-  return pd.DataFrame({'Tweet': data_cleaned, 'Class': y_pred})
+  y_pred=[mapped_predictions[i] for i in predictions]
+  data=map(_clean_data,data) #pass cleaned data
+  return pd.DataFrame({'Tweet': data, 'Class': y_pred})
 
 def pieplot_sentiment(dataset):
   sentiment_count = dataset["Class"].value_counts()
@@ -144,8 +150,8 @@ def plot_wordcloud(dataset, colormap="Greens"):
     stopwords=stop_words.union({'اكسبو','دبي','إكسبو'})
 
     # load the mask image and font type
-    mask = np.array(Image.open(f"{Path(__file__).parent}/twitter_mask.png"))
-    font = f"{Path(__file__).parent}/NotoNaskhArabic-Regular.ttf"
+    mask = np.array(Image.open(f"{Path(__file__).parent}\\twitter_mask.png"))
+    font = f"{Path(__file__).parent}\\NotoNaskhArabic-Regular.ttf"
 
     # generate custom colormap
     cmap = mpl.cm.get_cmap(colormap)(np.linspace(0, 1, 20))
@@ -221,8 +227,3 @@ def get_top_occuring_words_graph(dataset, ngram_range, title, n=10, color="#54A2
     fig=_plot_n_gram(n_gram_df, title, color="#54A24B")
     return fig
    
-
-
-
-
-
